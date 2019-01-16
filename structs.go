@@ -5,3 +5,9 @@ type UserData struct {
     Name string `json: "name"`
     Age string `json: age`
 }
+/*
+
+func (received_data UserData) AppendData() string {
+    return ("message received, data stored in memory")
+}
+*/
