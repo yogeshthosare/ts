@@ -25,3 +25,52 @@ d. able to serve in-memory data to the caller on port 2526 on any request, as me
 e. pending tasks - serving data from db if not present in-memory, error handling, logging, accepting parameters from user while running binary, setting accurate max-workers and max-queue size
 
 f. this is not final commit.. will update this info if needed.
+
+Third commit progress
+
+a. serving data from db if not present in-memory, error handling, logging, accepting parameters from user while running binary, setting accurate max-workers and max-queue size
+
+b. some structure changes
+
+c. performance tesing pending 
+
+d. updated way to run the binary -
+
+
+	Usage of ../../bin/main:
+  -dbip string
+    	Database ip (default "127.0.0.1")
+  -dbname string
+    	Database name (default "tsdb")
+  -dbport string
+    	Database port (default "3306")
+  -dbpwd string
+    	Database password (default "yogesh10")
+  -dbuser string
+    	Database username (default "root")
+  -logLevel string
+    	possible levels -debug, info, warn|warning, error, fatal, panic (default "info")
+  -port1 string
+    	Port accepting json and storing (default "2525")
+  -port2 string
+    	Port reading from storage and serving (default "2526")
+  -queue-size int
+    	Max records in a channel queue (default 100)
+  -server-ip string
+    	Host ip (default "localhost")
+  -worker-size int
+    	Max goroutins for database entries (default 5)
+
+
+   eg. $./main -port1 3030 -port 3031 
+
+e. I have added one basic script to test the service
+
+   for i in {1..10000} ; do
+  	echo {\"Id\": \"$i\", \"Name\": \"John Hasa\", \"Age\": \"30\"} | nc localhost 2525
+   done
+
+   run this shell script of simply feed one by one data
+
+
+
