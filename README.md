@@ -13,3 +13,15 @@ b. service is now able to listen on a port, read incoming data and responds back
 
 c. data handling, data manipulating, data storing, error handling, logging other port functioning etc to be done.
 
+Second commit progress - 
+a. some changes in structure, may have to work on variable names, strutures etc.. working out functionality. 
+
+b. able to put data in local in memory storage, also persisting data in mysql db
+
+c. creating n number of workers (goroutines) to persist data in db, enqueing incoming data/records in maxqueue (channel)
+
+d. able to serve in-memory data to the caller on port 2526 on any request, as mentioned in problem statement
+
+e. pending tasks - serving data from db if not present in-memory, error handling, logging, accepting parameters from user while running binary, setting accurate max-workers and max-queue size
+
+f. this is not final commit.. will update this info if needed.
