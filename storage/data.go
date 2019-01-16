@@ -1,6 +1,7 @@
 package storage
 
 import(
+    "ts/strlog"
     "net"
     "encoding/json"
     "github.com/jinzhu/gorm"
@@ -15,19 +16,26 @@ type UserData struct {
 
 var user_data_store []UserData
 
-func (received_data UserData) SaveInMemory() string {
+func (received_data UserData) SaveInMemory() {
     user_data_store = append(user_data_store, received_data)
-    //fmt.Println(user_data_store)
-    return ("message received, data stored in memory")
+    strlog.CommonLogger.Info("Data saved in-memory..", received_data)
 }
 
 func SaveToDb(db *gorm.DB, user_data UserData) {
-        db.Create(&user_data)
+    db.Create(&user_data)
+    strlog.CommonLogger.Info("Data saved into database..", user_data)
 }
 
 func ServeData(conn net.Conn, db *gorm.DB){
     if(len(user_data_store)==0){
+        strlog.CommonLogger.Info("Data served from database ..")
         db.Find(&user_data_store)
+        if(len(user_data_store)==0){
+            strlog.CommonLogger.Info("Data served from database ..")
+            conn.Write([]byte("No data available in storage! " + "\n"))
+        }
+    }else{
+        strlog.CommonLogger.Info("Data served from in-memory ..")
     }
     
     for _, user_data := range user_data_store {

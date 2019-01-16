@@ -2,7 +2,8 @@ package ts
 
 import(
     "ts/storage"
-    "fmt"
+    "ts/strlog"
+    "os"
     "github.com/jinzhu/gorm"
     _ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -13,9 +14,12 @@ func InitDbGetConn(user string, pwd string, ip string, dbport string, dbname str
     db, err := gorm.Open("mysql", connString)
     //defer db.Close()
     if err!=nil{
-        fmt.Println("Connection Failed to Open")
+        strlog.CommonLogger.Error("Database Initialization failed:", err.Error())
+        os.Exit(1)
+    }else{
+        strlog.CommonLogger.Info("Database Initialised successfully..")
     }
-    fmt.Println("Connection Established")
+    
     //db.DropTableIfExists(&UserData{})
     db.CreateTable(&storage.UserData{})
     return db

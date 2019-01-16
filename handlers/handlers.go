@@ -1,9 +1,10 @@
 package handlers
 
 import (
+    "ts/strlog"
     "ts/storage"
-    "fmt"
     "net"
+    "os"
     //"log"
     "encoding/json"
     "github.com/jinzhu/gorm"
@@ -22,7 +23,8 @@ func HandleRequestOne(conn net.Conn, user_data_chan_queue chan storage.UserData)
   lenReq, err := conn.Read(buffer)
   
   if err != nil {
-    fmt.Println("Error reading:", err.Error())
+    strlog.CommonLogger.Error("Error reading on first handler: ", err.Error())
+    os.Exit(1)
   }
   conn.Write(buffer)
 
@@ -33,6 +35,7 @@ func HandleRequestOne(conn net.Conn, user_data_chan_queue chan storage.UserData)
       panic(err)
   }
 
+  // putting data in channel 
   user_data_chan_queue <- user_data
 
   user_data.SaveInMemory()
@@ -53,7 +56,8 @@ func HandleRequestTwo(conn net.Conn, db *gorm.DB) {
   // Read the incoming connection into the buffer.
   lenReq, err := conn.Read(buffer)
   if err != nil {
-    fmt.Println("Error reading:", err.Error())
+    strlog.CommonLogger.Error("Error reading on second handler: ", err.Error())
+    os.Exit(1)
   }
 
   if lenReq>0{
