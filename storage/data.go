@@ -1,8 +1,6 @@
 package storage
 
 import(
-	"fmt"
-    "log"
     "net"
     "encoding/json"
     "github.com/jinzhu/gorm"
@@ -17,19 +15,6 @@ type UserData struct {
 
 var user_data_store []UserData
 
-func InitDbGetConn() *gorm.DB {
-    db, err := gorm.Open("mysql", "root:yogesh10@tcp(127.0.0.1:3306)/tsdb?charset=utf8&parseTime=True")
-    //defer db.Close()
-    if err!=nil{
-        fmt.Println("Connection Failed to Open")
-        log.Println(err)
-    }
-    fmt.Println("Connection Established")
-    //db.DropTableIfExists(&UserData{})
-    db.CreateTable(&UserData{})
-    return db
-}
-
 func (received_data UserData) SaveInMemory() string {
     user_data_store = append(user_data_store, received_data)
     //fmt.Println(user_data_store)
@@ -37,14 +22,15 @@ func (received_data UserData) SaveInMemory() string {
 }
 
 func SaveToDb(db *gorm.DB, user_data UserData) {
-           db.Create(&user_data)
+        db.Create(&user_data)
 }
 
-func ServeData(conn net.Conn){
-    //var user_data UserData
-    //if(UserData{}==user_data){}
+func ServeData(conn net.Conn, db *gorm.DB){
+    if(len(user_data_store)==0){
+        db.Find(&user_data_store)
+    }
+    
     for _, user_data := range user_data_store {
-        //db.Create(&user_data_store)
         resp, err := json.Marshal(user_data)
         if err != nil {
             panic(err)

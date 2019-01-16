@@ -1,7 +1,6 @@
 package listeners
 
 import (
-    "ts"
     "ts/handlers"
     "ts/storage" 
     "fmt"
@@ -9,16 +8,16 @@ import (
     "os"
 )
 
-func ListeningPortOne(user_data_chan_queue chan storage.UserData) {
+func ListeningPortOne(hostip string, port1 string, user_data_chan_queue chan storage.UserData) {
     //Listen on specified port.
-    listener, err := net.Listen(ts.Conn_Protocol, ts.Conn_Host+":"+ts.Conn_Port1)
+    listener, err := net.Listen("tcp", hostip+":"+port1)
     if err != nil {
         fmt.Println("Error listening:", err.Error())
         os.Exit(1)
     }
     //Close listener when application stops.
     defer listener.Close()
-    fmt.Println("Listening on " + ts.Conn_Host + ":" + ts.Conn_Port1)
+    fmt.Println("Listening on " + hostip + ":" + port1)
 
     for {
         //Wait for a connection.
