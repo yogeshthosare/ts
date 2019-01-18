@@ -30,8 +30,8 @@ func init() {
 func main() {
 
 	var (
-		maxqueuesize = flag.Int("queue-size", 100, "Max records in a channel queue")
-		maxworkers   = flag.Int("worker-size", 5, "Max goroutins for database entries")
+		maxqueuesize = flag.Int("queue-size", 1000, "Max records in a channel queue")
+		maxworkers   = flag.Int("worker-size", 10, "Max goroutins for database entries")
 		port1        = flag.String("port1", "2525", "Port accepting json and storing")
 		port2        = flag.String("port2", "2526", "Port reading from storage and serving")
 		hostip	 	 = flag.String("server-ip", "localhost", "Host ip")

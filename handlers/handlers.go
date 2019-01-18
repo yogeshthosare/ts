@@ -26,7 +26,7 @@ func HandleRequestOne(conn net.Conn, user_data_chan_queue chan storage.UserData)
     strlog.CommonLogger.Error("Error reading on first handler: ", err.Error())
     os.Exit(1)
   }
-  conn.Write(buffer)
+  //conn.Write(buffer)
 
   //get only actual received data
   received_data := (buffer[:lenReq])
@@ -41,7 +41,7 @@ func HandleRequestOne(conn net.Conn, user_data_chan_queue chan storage.UserData)
   user_data.SaveInMemory()
   
   //Send response back to the caller
-  conn.Write([]byte("data received and stored\n"))
+  conn.Write([]byte("Data received and stored\n"+string(received_data)))
   
   //Close the connection after execution.
   conn.Close()
