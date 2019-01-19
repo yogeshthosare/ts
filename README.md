@@ -98,9 +98,9 @@ E] Performance and observation
 
 ./test_client -concurrent-user 1000 -delay 3ns -req-per-user 1000 -> 25k requests per minute
 
-
-
 Have to put delay to wait for opened connections to be closed.
+
+Server is able to process 25k per minute without any issue.
 
 Not able to go beyond 1000 concurrent-users, server throws too many connection error. Since server 
 starting new connection on new goroutine for each incoming request.
@@ -108,5 +108,3 @@ starting new connection on new goroutine for each incoming request.
 Number of connections being opened on server side is becoming a bottlenect here.
 
 Please let me know your feedback. Thanks you it was indeed a great problem to spend time on.
-
-
