@@ -31,8 +31,11 @@ C] How to run main service ?
 
 Please make sure to create database and table using provided sql script.
 
-create binary of your service 
+	create database tsdb;
+	use tsdb;
+	create table user_data (id varchar(255), name varchar(255), age varchar(255));
 
+create binary of your service 
 
 	go build -o main main/main.go
 
