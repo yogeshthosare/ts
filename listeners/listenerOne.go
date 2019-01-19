@@ -6,6 +6,7 @@ import (
     "ts/strlog"
     "net"
     "os"
+    //"sync"
 )
 
 func ListeningPortOne(hostip string, port1 string, user_data_chan_queue chan storage.UserData) {
@@ -19,7 +20,8 @@ func ListeningPortOne(hostip string, port1 string, user_data_chan_queue chan sto
     defer listener.Close()
 
     strlog.CommonLogger.Info("service listening on port " + hostip + ":" + port1)
-
+    //var wg sync.WaitGroup
+    //wg.Add(30)
     for {
         //Wait for a connection.
         conn, err := listener.Accept()
@@ -30,6 +32,11 @@ func ListeningPortOne(hostip string, port1 string, user_data_chan_queue chan sto
         //Handle the connection in a new goroutine.
         //The loop then returns to accepting, so that
         //multiple connections may be served concurrently.
-        go handlers.HandleRequestOne(conn, user_data_chan_queue)
+        //go handlers.HandleRequestOne(conn, user_data_chan_queue)
+        go func(){
+            handlers.HandleRequestOne(conn, user_data_chan_queue)
+            //defer wg.Done()
+        }()
+        //wg.Wait()
     }
 }

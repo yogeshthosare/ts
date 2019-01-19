@@ -1,43 +1,43 @@
-Expose a simple TCP (not-HTTP) server that listens on two ports.
+A] Problem statement
+Service exposes a simple tcp server that listens on two ports
 
-Will keep on adding repo details and steps for running the service here.
+i. First Port: (Default port 2525)
+Accepts a JSON payload Example: {“id”: “1”, “name”: “John Doe”, “age”: “25”}
+and saves it to a buffered storage, say an array in memory. Another background
+process asynchronously writes this data to a database or a File.
 
-First commit progress -
-a. basic initial structure is ready, may change as I proceed.
+ii. Second Port: (Default port 2526)
+Any request on another Port Reads from the buffered storage, if the data exists,
+the endpoints send the response back. If the data does not exist in the buffered
+storage, it reads the data from the database/file and dumps the output and prints
+records line-by-line.
 
-b. service is now able to listen on a port, read incoming data and responds back to the caller
-   how to run : 
-	just run the binary without any parameters, service listens on localhost port 2525
-   how to request : from command line
-	echo '{"Id": "1", "Name": "John Hasa", "Age": "27"}'  | nc localhost 2525
+B] Approach - 
 
-c. data handling, data manipulating, data storing, error handling, logging other port functioning etc to be done.
+I have maintained a queuesize and workers, data will be fetched into the queue and then
+safely saved into database by worker in background asynchronously. 
 
-Second commit progress - 
-a. some changes in structure, may have to work on variable names, strutures etc.. working out functionality. 
+As stated in problem statement data is also stored in memory. Any request on second port 
+fetches the data from in-memory if avalable else fetches it from database and dumps output
+line by line.
 
-b. able to put data in local in memory storage, also persisting data in mysql db
+Service is designed in structured way depending on the functionality of each component. 
 
-c. creating n number of workers (goroutines) to persist data in db, enqueing incoming data/records in maxqueue (channel)
+I have used gorm library for better db performance.
 
-d. able to serve in-memory data to the caller on port 2526 on any request, as mentioned in problem statement
+Log file is maintained seperately.
 
-e. pending tasks - serving data from db if not present in-memory, error handling, logging, accepting parameters from user while running binary, setting accurate max-workers and max-queue size
+C] How to run main service ?
 
-f. this is not final commit.. will update this info if needed.
+Please make sure to create database and table using provided sql script.
 
-Third commit progress
+create binary of your service 
 
-a. serving data from db if not present in-memory, error handling, logging, accepting parameters from user while running binary, setting accurate max-workers and max-queue size
+go build -o main main/main.go
 
-b. some structure changes
+./main --help
 
-c. performance tesing pending 
-
-d. updated way to run the binary -
-
-
-	Usage of ../../bin/main:
+Usage of ./main:
   -dbip string
     	Database ip (default "127.0.0.1")
   -dbname string
@@ -55,22 +55,45 @@ d. updated way to run the binary -
   -port2 string
     	Port reading from storage and serving (default "2526")
   -queue-size int
-    	Max records in a channel queue (default 100)
+    	Max records in a channel queue (default 1000)
   -server-ip string
     	Host ip (default "localhost")
   -worker-size int
-    	Max goroutins for database entries (default 5)
+    	Max goroutins for database entries (default 10)
 
 
-   eg. $./main -port1 3030 -port 3031 
+D] How to run test script ?
 
-e. I have added one basic script to test the service
+use shell script provided in test_scripts directory directly
+./basic_test.sh
 
-   for i in {1..10000} ; do
-  	echo {\"Id\": \"$i\", \"Name\": \"John Hasa\", \"Age\": \"30\"} | nc localhost 2525
-   done
+use golang script for concurent testing and performance testing
+go build -o [test_script] [test_scripts/test_client.go]
 
-   run this shell script of simply feed one by one data
+./test_client --help
 
+Usage of test_client:
+  -concurrent-user int
+    	max concurrent requests, default is 1000 (default 1000)
+  -delay duration
+    	delay between two consecative requests made by a user (default 5ns)
+  -req-per-user int
+    	requests per user, default is 1000 (default 1000)
+
+E] Performance and observation
+
+./test_client -concurrent-user 1 -delay 0ns -req-per-user 100000 -> 15k requests per minute
+./test_client -concurrent-user 250 -delay 1ns -req-per-user 1000 -> 14k requests per minute
+./test_client -concurrent-user 500 -delay 2ns -req-per-user 1000 -> 16k requests per minute
+./test_client -concurrent-user 1000 -delay 3ns -req-per-user 1000 -> 25k requests per minute
+
+Have to put delay to wait for opened connections to be closed.
+Not able to go beyond 1000 concurrent-users, server throws too many connection error. Since server 
+starting new connection on new goroutine for each incoming request.
+
+Number of connections being opened on server side is becoming a bottlenect here.
+
+
+Please let me know your feedback. Thanks you it was indeed a great problem to spend time on.
 
 

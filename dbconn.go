@@ -1,7 +1,6 @@
 package ts
 
 import(
-    "ts/storage"
     "ts/strlog"
     "os"
     "github.com/jinzhu/gorm"
@@ -20,7 +19,8 @@ func InitDbGetConn(user string, pwd string, ip string, dbport string, dbname str
         strlog.CommonLogger.Info("Database Initialised successfully..")
     }
     
+    //create table user_data (id varchar(255), name varchar(255), age varchar(255));
     //db.DropTableIfExists(&UserData{})
-    db.CreateTable(&storage.UserData{})
+    //db.CreateTable(&storage.UserData{})
     return db
 }
