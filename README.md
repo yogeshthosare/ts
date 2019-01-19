@@ -69,6 +69,15 @@ D] How to run test script ?
 use shell script provided in test_scripts directory directly
 
 	./basic_test.sh
+	
+	for i in {1..1000} ; do
+  	echo {\"Id\": \"$i\", \"Name\": \"John Hasa\", \"Age\": \"30\"} | nc localhost 2525 &
+	done
+	
+Any request on second port fetches the data from in-memory if avalable else fetches it from database and dumps output
+line by line.
+	
+  	echo "get data" | nc localhost 2526
 
 use golang script for concurent testing and performance testing
 
