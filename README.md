@@ -1,5 +1,4 @@
-A] Problem statement
-Service exposes a simple tcp server that listens on two ports
+A] Service exposes a simple tcp server that listens on two ports
 
 i. First Port: (Default port 2525)
 Accepts a JSON payload Example: {“id”: “1”, “name”: “John Doe”, “age”: “25”}
@@ -17,13 +16,12 @@ B] Approach -
 I have maintained a queuesize and workers, data will be fetched into the queue and then
 safely saved into database by worker in background asynchronously. 
 
-As stated in problem statement data is also stored in memory. Any request on second port 
-fetches the data from in-memory if avalable else fetches it from database and dumps output
-line by line.
+Data is also stored in memory. Any request on second port fetches the data from in-memory if avalable
+else fetches it from database and dumps output line by line.
 
 Service is designed in structured way depending on the functionality of each component. 
 
-I have used gorm library for better db performance.
+Have used gorm library for better db orm model support.
 
 Log file is maintained seperately.
 
@@ -69,7 +67,7 @@ create binary of your service
 
 D] How to run test script ?
 
-use shell script provided in test_scripts directory directly
+use shell script provided in test_scripts directory
 
 	./basic_test.sh
 	
@@ -110,5 +108,4 @@ E] Performance and observation
 
 ./test_client -concurrent-user 1000 -delay 3ns -req-per-user 1000 -> 25k requests per minute
 
-Have to put delay to wait for opened connections to be closed.
-Please let me know your feedback. Thanks you it was indeed a great problem to spend time on.
+Have to put delay to wait for opened connections to be closed. Room for improvement there.
