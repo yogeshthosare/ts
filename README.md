@@ -1,3 +1,12 @@
+Go pattern for worker queue - 
+I have maintained a queuesize and workers, data will be fetched into the queue and then
+safely saved into database by worker in background asynchronously. 
+
+Data is also stored in memory. Any request on second port fetches the data from in-memory if avalable
+else fetches it from database and dumps output line by line.
+
+
+
 A] Service exposes a simple tcp server that listens on two ports
 
 i. First Port: (Default port 2525)
@@ -11,19 +20,7 @@ the endpoints send the response back. If the data does not exist in the buffered
 storage, it reads the data from the database/file and dumps the output and prints
 records line-by-line.
 
-B] Approach - 
 
-I have maintained a queuesize and workers, data will be fetched into the queue and then
-safely saved into database by worker in background asynchronously. 
-
-Data is also stored in memory. Any request on second port fetches the data from in-memory if avalable
-else fetches it from database and dumps output line by line.
-
-Service is designed in structured way depending on the functionality of each component. 
-
-Have used gorm library for better db orm model support.
-
-Log file is maintained seperately.
 
 C] How to run main service ?
 
